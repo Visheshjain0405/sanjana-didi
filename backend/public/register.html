@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Private User Registration — Didi & Bhai ❤️</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #FFF9F4 0%, #FDEBEA 50%, #F9D1D5 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #FFFDFB;
+      width: 100%;
+      max-width: 440px;
+      padding: 32px 28px;
+      border-radius: 28px;
+      border: 1.5px solid #F6E4DA;
+      box-shadow: 0 12px 32px rgba(201, 79, 91, 0.12);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .badge {
+      font-size: 38px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 800;
+      color: '#2A1B1C';
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #8E6E6E;
+      font-weight: 600;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #5C4040;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    input, select {
+      width: 100%;
+      height: 48px;
+      padding: 0 16px;
+      background: #FFF8F5;
+      border: 1.5px solid #F6E4DA;
+      border-radius: 16px;
+      font-size: 14px;
+      color: #2A1B1C;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    input:focus, select:focus {
+      border-color: #DE5462;
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(222, 84, 98, 0.1);
+    }
+    .btn {
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(135deg, #E05263 0%, #C94F5B 100%);
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 800;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 6px 16px rgba(224, 82, 99, 0.3);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(224, 82, 99, 0.4);
+    }
+    .btn:active {
+      transform: translateY(1px);
+    }
+    .alert {
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: none;
+      text-align: center;
+    }
+    .alert-success {
+      background: #E6F4EA;
+      color: #137333;
+      border: 1px solid #CEEAD6;
+    }
+    .alert-error {
+      background: #FCE8E6;
+      color: #C5221F;
+      border: 1px solid #FAD2CF;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="badge">🌸☕</div>
+      <h1 class="title">Create Private Account</h1>
+      <p class="subtitle">Exclusive portal for Didi & Bhai mobile app</p>
+    </div>
+
+    <div id="alertBox" class="alert"></div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="name">Display Name</label>
+        <input type="text" id="name" placeholder="e.g. Sanjana Didi" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="e.g. sanjana@gmail.com" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required />
+      </div>
+
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" required>
+          <option value="didi">Sanjana Didi 👸</option>
+          <option value="bhai">Bhai 👦</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">Register Account</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const role = document.getElementById('role').value;
+
+      alertBox.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Registering...';
+
+      try {
+        const apiUrl = 'http://localhost:5002/api/auth/register';
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, password, role }),
+        });
+
+        const data = await response.json();
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Register Account';
+
+        if (response.ok) {
+          alertBox.className = 'alert alert-success';
+          alertBox.innerText = '🎉 Account created! You can now log in via the mobile app.';
+          alertBox.style.display = 'block';
+          form.reset();
+        } else {
+          alertBox.className = 'alert alert-error';
+          alertBox.innerText = '⚠️ ' + (data.error || 'Failed to register account.');
+          alertBox.style.display = 'block';
+        }
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Register Account';
+        alertBox.className = 'alert alert-error';
+        alertBox.innerText = '⚠️ Unable to connect to backend server.';
+        alertBox.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
