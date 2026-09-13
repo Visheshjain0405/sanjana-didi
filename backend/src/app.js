@@ -10,6 +10,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Health check endpoint for Render/monitoring
+app.get('/health', (req, res) => res.status(200).send('OK'));
+
 // Serve static web portal from /public
 app.use(express.static(path.join(__dirname, '../../public')));
 

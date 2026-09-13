@@ -37,7 +37,7 @@ try {
   // Ignore if port was free
 }
 
-const serverInstance = server.listen(PORT, () => {
+const serverInstance = server.listen(PORT, '0.0.0.0', () => {
   console.log(`Didi & Bhai Backend Server running on port ${PORT}`);
 });
 
